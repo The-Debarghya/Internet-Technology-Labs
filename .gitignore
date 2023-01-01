@@ -1,0 +1,13 @@
+# Python Bytecode Files
+*.pyc
+__pycache__/*
+
+# Doc Files
+*.pdf
+*.doc
+*.docx
+
+# Images
+*.jpg
+*.jpeg
+*.png
