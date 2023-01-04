@@ -11,3 +11,7 @@ __pycache__/*
 *.jpg
 *.jpeg
 *.png
+
+# config and data
+*.json
+.vscode/*
