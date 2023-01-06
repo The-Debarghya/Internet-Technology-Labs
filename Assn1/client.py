@@ -3,7 +3,7 @@
 import socket
 import argparse
 
-def send_and_receive(host, port, user, pw):
+def init_client(host, port, user, pw):
     c = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     c.connect((host, port))
     c.send(f"{user} {pw}".encode('utf-8'))
@@ -20,7 +20,7 @@ def send_and_receive(host, port, user, pw):
                     c.send(pw.encode('utf-8'))
                     print(c.recv(1024).decode('utf-8'))
                 else:
-                    print(c.recv(1024).decode('utf-8'))
+                    print(recvd)
             elif command.startswith("close"):
                 print(c.recv(1024).decode('utf-8'))
                 c.close()
@@ -37,4 +37,4 @@ if __name__ == "__main__":
     parser.add_argument('-u', metavar='username', type=str, help='Specify Username', required=True)
     parser.add_argument('-p', metavar='password', type=str, help='Specify Password', required=True)
     args = parser.parse_args()
-    send_and_receive(args.host, args.port, args.u, args.p)
+    init_client(args.host, args.port, args.u, args.p)

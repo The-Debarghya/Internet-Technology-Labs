@@ -47,7 +47,10 @@ def server_init(c: socket.socket, user_mapping: dict, userName: str):
                 if len(command) != 2 or command[1] not in user_mapping.keys():
                     c.send(b"Invalid arguments/username")
                 elif command[1] == "debarghya" or user_mapping[command[1]].role == Role.Admin:
-                    user_mapping['debarghya'].set_admin_rights()
+                    try:
+                        user_mapping['debarghya'].set_admin_rights()
+                    except KeyError:
+                        pass
                     c.send(b"Already admin.")
                 else:
                     c.send(b"Enter admin password:")
