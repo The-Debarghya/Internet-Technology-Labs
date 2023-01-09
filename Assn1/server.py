@@ -3,10 +3,10 @@
 import socket
 import logging
 from utility import *
-from threading import Thread
+from threading import Thread, Lock
 
 
-def server_init(c: socket.socket, user_mapping: dict, userName: str):
+def server_init(c: socket.socket, user_mapping: dict, userName: str, lock: Lock):
     logging.basicConfig(format='%(asctime)s - %(message)s',
                         level=logging.INFO, datefmt='[%d-%b-%y %H:%M:%S]')
     while True:
@@ -20,7 +20,7 @@ def server_init(c: socket.socket, user_mapping: dict, userName: str):
                         li.append(user_mapping[userName].get_value(i))
                     except KeyError as e:
                         logging.error(e)
-                        continue
+                        li.append('')
                 c.send(li.__str__().encode("utf-8"))
             case "getall":
                 logging.log(20, " ".join(command) + f" - {userName}")
@@ -64,6 +64,12 @@ def server_init(c: socket.socket, user_mapping: dict, userName: str):
                 logging.log(20, " ".join(command) + f" - {userName}")
                 c.send(b"Connection closed.")
                 c.close()
+                if not lock.locked():
+                    lock.acquire()
+                    global clients
+                    clients -= 1
+                    print(f"Number of clients:{clients}")
+                    lock.release()
                 break
             case _:
                 logging.log(40, " ".join(command) + f" - {userName}")
@@ -73,6 +79,9 @@ def server_init(c: socket.socket, user_mapping: dict, userName: str):
 if __name__ == "__main__":
     data = get_user_and_pass()
     user_mapping = dict()
+    global clients
+    clients = 0
+    lock = Lock()
     for u, p in data.items():
         userObj = User(u, p)
         user_mapping[u] = userObj
@@ -90,7 +99,11 @@ if __name__ == "__main__":
         logging.log(20, data)
         if check_password(data[1], get_pass_by_username(data[0])):
             thread = Thread(target=server_init, args=(
-                conn, user_mapping, data[0]), daemon=True)
+                conn, user_mapping, data[0], lock), daemon=True)
             thread.start()
+            lock.acquire()
+            clients += 1
+            print(f"Number of clients:{clients}")
+            lock.release()
         else:
             conn.close()

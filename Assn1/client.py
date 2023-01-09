@@ -29,6 +29,8 @@ def init_client(host, port, user, pw):
                 print(c.recv(1024).decode("utf-8"))
     except ConnectionRefusedError:
         print("Username/Password is incorrect.\nConnection terminated")
+    except Exception as err:
+        print(err)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Send, receive TCP connection')
