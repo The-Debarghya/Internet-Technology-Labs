@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View File</title>
+</head>
+<body>
+    <% if (fileName.endsWith('.txt')) { %>
+        <h1>Contents of <%= fileName %></h1> 
+        <%= content %>
+    <% } else if (fileName.endsWith('.png')) { %>
+        <h1>Image preview of <%= fileName %></h1>
+        <img src="data:image/png;base64, <%= content %>" alt="image">
+    <% } else if (fileName.endsWith('.gif')) { %>
+        <h1>Image preview of <%= fileName %></h1>
+        <img src="data:image/gif;base64, <%= content %>" alt="image">
+    <% } else { %>
+        <h1>Image preview of <%= fileName %></h1>
+        <img src="data:image/jpeg;base64, <%= content %>" alt="image">
+    <% } %>
+    <a href="/dashboard">Go to Dashboard</a><br>
+    <a href="/files">Check Other Files</a>
+</body>
+</html>

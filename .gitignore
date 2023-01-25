@@ -11,7 +11,7 @@ __pycache__/*
 *.jpg
 *.jpeg
 *.png
-uploads/*
+uploads/
 
 # config and data
 *.json
@@ -21,4 +21,4 @@ uploads/*
 .env
 
 # dependancies
-node_modules/*
+node_modules/
