@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,13 +9,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload a File</title>
 </head>
-<body>
-    <form action="/upload" enctype="multipart/form-data" method="post">
-        <div class="form-group">
-            <input type="file" class="form-control-file" name="uploaded_file">
-            <input type="submit" value="Submit" class="btn btn-default">
+<body class="has-text-centered">
+    <h1 class="title is-3"></h1>
+    <section class="hero bd-hero bd-is-basic">
+        <div class="hero-body">
+          <p class="title">
+            Upload Files:
+          </p>
+          <p class="subtitle">
+            You can upload files here.
+          </p>
+          <p class="subtitle is-6">
+            Go back to <a href="/dashboard">Dashboard</a>
+          </p>
+          <form action="/upload" enctype="multipart/form-data" method="post">
+            <div class="form-group">
+                <input type="file" class="form-control-file" name="uploaded_file">
+                <input type="submit" value="Submit" class="button is-info is-small is-light">
+            </div>
+        </form>
         </div>
-    </form>
-    <a href="/dashboard">Go to Dashboard</a><br>
+      </section>
+      <section class="section is-small "></section>
+      <footer class="footer">
+        <div class="content has-text-centered">
+          <p>
+            <strong>File Store</strong> by <a href="https://github.com/The-Debarghya">Debarghya Maitra</a>. The source code is licensed
+            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
+            is not licensed. <br>
+            Generated with <a href="https://ejs.co/">EJS</a> and ❤.
+          </p>
+        </div>
+      </footer>
 </body>
 </html>

@@ -42,4 +42,6 @@ app.all('*', (req, res) => {
     res.status(404);
 })
 
-app.listen(3000);
+app.listen(3000, () => {
+    console.log("Server is up and running at ::3000")
+});

@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +10,42 @@
     <title>Dashboard</title>
 </head>
 <body>
-    Viewing the Dashboard. <a href="/logout">logout and reload</a>
-    Check <a href="/upload">Upload</a> <a href="/files">Download</a>
+    <h1 class="title is-2"></h1>
+    <section class="hero bd-hero bd-is-basic">
+        <div class="hero-body">
+          <p class="title">
+            Dashboard
+          </p>
+          <p class="subtitle">
+            Navigate to uploading/viewing/downloading files.
+          </p>
+          <p class="subtitle is-6">
+            <a href="/logout">Log out</a> from this account.
+          </p>
+          <div class="field is-grouped">
+            <div class="control">
+              <form action="/upload">                
+                <button class="button is-info is-small is-light">Upload</button>
+              </form>
+            </div>
+            <div class="control">
+              <form action="/files">
+                <button class="button is-info is-small is-light">View/Download</button>
+              </form> 
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="section is-small "></section>
+      <footer class="footer">
+        <div class="content has-text-centered">
+          <p>
+            <strong>File Store</strong> by <a href="https://github.com/The-Debarghya">Debarghya Maitra</a>. The source code is licensed
+            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
+            is not licensed. Generated with <a href="">EJS</a> and ❤.
+          </p>
+        </div>
+      </footer
+      
 </body>
 </html>

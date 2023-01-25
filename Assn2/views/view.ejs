@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,19 +11,99 @@
 </head>
 <body>
     <% if (fileName.endsWith('.txt')) { %>
-        <h1>Contents of <%= fileName %></h1> 
-        <%= content %>
+        <section class="hero bd-hero bd-is-basic">
+            <div class="hero-body">
+              <p class="title">
+               <%= fileName %>
+              </p>
+              <p class="subtitle">
+                Contents of your file.
+              </p>
+              <p class="subtitle is-6">
+                Go back to <a href="/dashboard">Dashboard.</a>Check out other <a href="/files">files</a>.
+              </p>
+            </div>
+          </section>
+        <div class="card">
+            <div class="card-content">
+              <div class="content">
+                <%= content %>
+              </div>
+            </div>
+        </div> 
     <% } else if (fileName.endsWith('.png')) { %>
-        <h1>Image preview of <%= fileName %></h1>
-        <img src="data:image/png;base64, <%= content %>" alt="image">
+        <section class="hero bd-hero bd-is-basic">
+            <div class="hero-body">
+              <p class="title">
+               <%= fileName %>
+              </p>
+              <p class="subtitle">
+                Preview of your file.
+              </p>
+              <p class="subtitle is-6">
+                Go back to <a href="/dashboard">Dashboard.</a>Check out other <a href="/files">files</a>.
+              </p>
+            </div>
+          </section>
+        <div class="card">
+            <div class="card-image">
+              <figure class="image is-4by3">
+                <img src="data:image/png;base64, <%= content %>" alt="image">
+              </figure>
+            </div>
+        </div>
     <% } else if (fileName.endsWith('.gif')) { %>
-        <h1>Image preview of <%= fileName %></h1>
-        <img src="data:image/gif;base64, <%= content %>" alt="image">
+        <section class="hero bd-hero bd-is-basic">
+            <div class="hero-body">
+              <p class="title">
+               <%= fileName %>
+              </p>
+              <p class="subtitle">
+                Preview of your file.
+              </p>
+              <p class="subtitle is-6">
+                Go back to <a href="/dashboard">Dashboard.</a>Check out other <a href="/files">files</a>.
+              </p>
+            </div>
+          </section>
+        <div class="card">
+            <div class="card-image">
+              <figure class="image is-4by3">
+                <img src="data:image/gif;base64, <%= content %>" alt="image">
+              </figure>
+            </div>
+        </div>
     <% } else { %>
-        <h1>Image preview of <%= fileName %></h1>
-        <img src="data:image/jpeg;base64, <%= content %>" alt="image">
+        <section class="hero bd-hero bd-is-basic">
+            <div class="hero-body">
+              <p class="title">
+               <%= fileName %>
+              </p>
+              <p class="subtitle">
+                Preview of your file.
+              </p>
+              <p class="subtitle is-6">
+                Go back to <a href="/dashboard">Dashboard.</a>Check out other <a href="/files">files</a>.
+              </p>
+            </div>
+          </section>
+        <div class="card">
+            <div class="card-image">
+              <figure class="image is-4by3">
+                <img src="data:image/jpeg;base64, <%= content %>" alt="image">
+              </figure>
+            </div>
+        </div>
     <% } %>
-    <a href="/dashboard">Go to Dashboard</a><br>
-    <a href="/files">Check Other Files</a>
+    <section class="section is-small "></section>
+      <footer class="footer">
+        <div class="content has-text-centered">
+          <p>
+            <strong>File Store</strong> by <a href="https://github.com/The-Debarghya">Debarghya Maitra</a>. The source code is licensed
+            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
+            is not licensed. Generated with <a href="">EJS</a> and ❤.
+          </p>
+        </div>
+      </footer
 </body>
 </html>

@@ -49,6 +49,7 @@ router.post('/register', async (req, res, next) => {
     } catch (err) {
         if(err.code === 'EEXIST'){
             res.status(409).render('error', {data: {errorType: `Username already exists`}});
+            return next(err);
         } else {
             res.status(500).render('error', {data: {errorType: 'Error while creating directory'}});
             return next(err);
@@ -97,6 +98,9 @@ router.post('/upload', isAuth, upload.single('uploaded_file'), async (req, res, 
 });
 
 router.get('/', (req, res, next) => {
+    if (req.isAuthenticated()) {
+        res.redirect('dashboard');
+    }
     res.render('home');
 });
 

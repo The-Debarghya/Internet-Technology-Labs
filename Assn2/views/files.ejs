@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,13 +10,59 @@
     <title>Files List</title>
 </head>
 <body>
-    <h1>The Following Files are Available:</h1>
-    <ul>
-        <% for(let i=0; i< fileNames.length;i++){ %>
-            <li><h3><%= fileNames[i] %></h3> <a href="/view/:<%= fileNames[i] %>">View</a> <a href="/download/:<%= fileNames[i] %>">Download</a></li>
-        <% } %>
-    </ul>
-
-    <a href="/dashboard">Go to Dashboard</a><br>
+    <h1 class="title is-3"></h1>
+    <section class="hero bd-hero bd-is-basic">
+        <div class="hero-body">
+          <p class="title">
+            Available Files:
+          </p>
+          <p class="subtitle">
+            Your uploaded files will be listed here.
+          </p>
+          <p class="subtitle is-6">
+            Go back to <a href="/dashboard">Dashboard</a>
+          </p>
+        </div>
+      </section>
+      <section class="section is-small">
+    <div class="content">
+        <% for(let i=0; i< fileNames.length;i++){ %>            
+            <p class="subtitle is-4 has-icons-left">
+              <span class="icon is-small is-left">
+                <li>
+                    <% if (fileNames[i].endsWith('.txt')) { %>
+                        <i class="fas fa-file-lines"></i>
+                    <% } else { %>
+                        <i class="fas fa-file-image"></i>
+                    <% } %>
+                    <%= fileNames[i] %>                    
+                </li>
+              </span>              
+            </p>
+            <div class="field is-grouped">
+              <div class="control">
+                <form action="/view/:<%= fileNames[i] %>">                
+                  <button class="button is-info is-small is-light">View</button>
+                </form>
+              </div>
+              <div class="control">
+                <form action="/download/:<%= fileNames[i] %>">
+                  <button class="button is-info is-small is-light">Download</button>
+                </form> 
+              </div>
+            </div>
+          <% } %>
+    </div>
+    </section>
+    <section class="section is-small "></section>
+      <footer class="footer">
+        <div class="content has-text-centered">
+          <p>
+            <strong>File Store</strong> by <a href="https://github.com/The-Debarghya">Debarghya Maitra</a>. The source code is licensed
+            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
+            is not licensed. Generated with <a href="">EJS</a> and ❤.
+          </p>
+        </div>
+      </footer
 </body>
 </html>
