@@ -14,7 +14,7 @@ __pycache__/*
 uploads/
 
 # config and data
-*.json
+Names.json
 .vscode/*
 
 # secrets
