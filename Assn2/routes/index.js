@@ -57,7 +57,7 @@ router.post('/register', async (req, res, next) => {
     }
     newUser.save()
         .then((user) => {
-            console.log(user);
+           // console.log(user);
         });
     res.set("Content-Security-Policy", "script-src 'sha256-HKHu8KzWy+uFQ5xdfwaa0tCXOadFl9TeeAR/XBFTSbw='")
     res.render('success', {message: 'Registered Successfully!', redirect: '/login'});
@@ -150,14 +150,18 @@ router.get('/view/:fileName', isAuth, async (req, res) => {
     const user = await User.findById(req.session.passport.user);
     const root = path.resolve(__dirname + "/../");
     let content;
-    if (req.params.fileName.endsWith(".txt")) {
-        content = fs.readFileSync(root + '/uploads/'+ user.folder + "/" + req.params.fileName.slice(1))
-    } else {
-        content = fs.readFileSync(root + '/uploads/'+ user.folder + "/" + req.params.fileName.slice(1))
-        const base64enc = Buffer.from(content).toString('base64');
-        content = base64enc;
+    try {
+        if (req.params.fileName.endsWith(".txt")) {
+            content = fs.readFileSync(root + '/uploads/'+ user.folder + "/" + req.params.fileName.slice(1))
+        } else {
+            content = fs.readFileSync(root + '/uploads/'+ user.folder + "/" + req.params.fileName.slice(1))
+            const base64enc = Buffer.from(content).toString('base64');
+            content = base64enc;
+        }
+        res.render('view', {content: content, fileName: req.params.fileName.slice(1)})
+    } catch (error) {
+        res.render('error', {data: {errorType: "No such file or directory!"}});
     }
-    res.render('view', {content: content, fileName: req.params.fileName.slice(1)})
 })
 
 router.get('/download/:fileName', isAuth, async (req, res, next) => {
@@ -177,4 +181,5 @@ router.get('/view', isAuth, (req, res) => {
 router.get('/download', isAuth, (req, res) => {
     res.render('error', {data: {errorType: "Blank File Name"}})
 })
+
 module.exports = router;

@@ -43,57 +43,58 @@
               <p class="subtitle is-6">
                 Go back to <a href="/dashboard">Dashboard.</a>Check out other <a href="/files">files</a>.
               </p>
+              <div class="card">
+                <div class="card-image">
+                  <figure class="image is-1by1">
+                    <img src="data:image/png;base64, <%= content %>" alt="image">
+                  </figure>
+                </div>
+            </div>
             </div>
           </section>
-        <div class="card">
-            <div class="card-image">
-              <figure class="image is-4by3">
-                <img src="data:image/png;base64, <%= content %>" alt="image">
-              </figure>
-            </div>
-        </div>
+        
     <% } else if (fileName.endsWith('.gif')) { %>
-        <section class="hero bd-hero bd-is-basic">
-            <div class="hero-body">
-              <p class="title">
-               <%= fileName %>
-              </p>
-              <p class="subtitle">
-                Preview of your file.
-              </p>
-              <p class="subtitle is-6">
-                Go back to <a href="/dashboard">Dashboard.</a>Check out other <a href="/files">files</a>.
-              </p>
-            </div>
-          </section>
-        <div class="card">
+      <section class="hero bd-hero bd-is-basic">
+        <div class="hero-body">
+          <p class="title">
+           <%= fileName %>
+          </p>
+          <p class="subtitle">
+            Preview of your file.
+          </p>
+          <p class="subtitle is-6">
+            Go back to <a href="/dashboard">Dashboard.</a>Check out other <a href="/files">files</a>.
+          </p>
+          <div class="card">
             <div class="card-image">
-              <figure class="image is-4by3">
+              <figure class="image is-1by1">
                 <img src="data:image/gif;base64, <%= content %>" alt="image">
               </figure>
             </div>
         </div>
+        </div>
+      </section>
     <% } else { %>
-        <section class="hero bd-hero bd-is-basic">
-            <div class="hero-body">
-              <p class="title">
-               <%= fileName %>
-              </p>
-              <p class="subtitle">
-                Preview of your file.
-              </p>
-              <p class="subtitle is-6">
-                Go back to <a href="/dashboard">Dashboard.</a>Check out other <a href="/files">files</a>.
-              </p>
-            </div>
-          </section>
-        <div class="card">
+      <section class="hero bd-hero bd-is-basic">
+        <div class="hero-body">
+          <p class="title">
+           <%= fileName %>
+          </p>
+          <p class="subtitle">
+            Preview of your file.
+          </p>
+          <p class="subtitle is-6">
+            Go back to <a href="/dashboard">Dashboard.</a>Check out other <a href="/files">files</a>.
+          </p>
+          <div class="card">
             <div class="card-image">
-              <figure class="image is-4by3">
+              <figure class="image is-1by1">
                 <img src="data:image/jpeg;base64, <%= content %>" alt="image">
               </figure>
             </div>
         </div>
+        </div>
+      </section>
     <% } %>
     <section class="section is-small "></section>
       <footer class="footer">
