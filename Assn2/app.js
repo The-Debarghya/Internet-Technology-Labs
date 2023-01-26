@@ -19,10 +19,10 @@ app.use(session({
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
-    store: sessionStore,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 // Equals 1 day 
-    }
+    },
+    store: sessionStore
 }));
 
 app.use(helmet());
