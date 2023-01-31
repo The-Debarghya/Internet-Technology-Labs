@@ -3,8 +3,10 @@ const session = require('express-session');
 const passport = require('passport');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const favicon = require('serve-favicon');
 const routes = require('./routes');
 const MongoStore = require('connect-mongo');
+const path = require('path');
 require('dotenv').config();
 
 var app = express();
@@ -32,6 +34,7 @@ require('./config/passport');
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/uploads', express.static('uploads'));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(morgan('[:remote-addr] [:date[web]] ":method :url HTTP/:http-version" :status ":user-agent"'))
 app.use(routes);
 app.use((err, req, res, next) => {

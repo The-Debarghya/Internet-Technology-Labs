@@ -7,6 +7,7 @@ services:
     volumes:
       - mongodb_data:/data/db
   file-store:
+    image: file-store:latest
     build: .
     environment:
       - MONGO_URL=mongodb://mongodb:27017/test_db
