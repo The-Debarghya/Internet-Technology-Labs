@@ -142,7 +142,16 @@ router.get('/upload', isAuth, (req, res, next) => {
 
 router.get('/files', isAuth, async (req, res, next) => {
     const user = await User.findById(req.session.passport.user);
-    fileNames = await fs.promises.readdir(__dirname + '/../uploads/' + user.folder);
+    var fileNames = [];
+    if (user.username === 'admin') {
+       const dirNames = await fs.promises.readdir(__dirname + '/../uploads/');
+       for (let i = 0; i < dirNames.length; i++) {
+            const files = fs.readdirSync(__dirname + '/../uploads/' + dirNames[i]);
+            fileNames.push(...files)              
+       }
+    } else {
+       fileNames = await fs.promises.readdir(__dirname + '/../uploads/' + user.folder); 
+    }
     res.render('files', {fileNames: fileNames});
 });
 
