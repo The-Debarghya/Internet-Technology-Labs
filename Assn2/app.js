@@ -39,7 +39,7 @@ app.use(morgan('[:remote-addr] [:date[web]] ":method :url HTTP/:http-version" :s
 app.use(routes);
 app.use((err, req, res, next) => {
     if (err.code === 'LIMIT_FILE_SIZE') {
-      return res.status(413).send('File size exceeded. Maximum allowed size is 5MB');
+      return res.status(413).send('File size exceeded. Maximum allowed size is 20MB');
     }
     next(err);
 });

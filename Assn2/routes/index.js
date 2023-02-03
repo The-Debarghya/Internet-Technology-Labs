@@ -88,10 +88,13 @@ const upload = multer({
         fileSize: 20 * 1024 * 1024 // 20 MiB
     }
 });
-router.post('/upload', isAuth, upload.single('uploaded_file'), async (req, res, next) => {
+router.post('/upload', isAuth, upload.single('uploaded_file'), async (err, req, res, next) => {
     const user = await User.findById(req.session.passport.user);
     if (!user) {
         return res.status(404).render('error', {data: {errorType: "User not found"}});
+    }
+    if (err !== null) {
+        return res.status(400).render('error', {data: {errorType: err.message}})
     }    
     res.set("Content-Security-Policy", "script-src 'sha256-MSnSmGZTR0J+A2zO+oWr29zXYQp+frnwJyJJwQgaJkM='")
     res.render('success', {message: 'Uploaded Successfully!', redirect: '/dashboard'});
@@ -105,18 +108,25 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/login', (req, res, next) => {
+    if (req.isAuthenticated()) {
+        res.redirect('dashboard');
+    }
     res.render('login');
 });
 
 router.get('/register', (req, res, next) => {
+    if (req.isAuthenticated()) {
+        res.redirect('dashboard');
+    }
     res.render('register');
 });
 
-router.get('/dashboard', isAuth, (req, res, next) => {
-    res.render('dashboard');
+router.get('/dashboard', isAuth, async (req, res, next) => {
+    const user = await User.findById(req.session.passport.user);
+    res.render('dashboard', {user: user.username});
 });
 
-router.get('/logout', (req, res, next) => {
+router.get('/logout', isAuth, (req, res, next) => {
     req.logout((err) => {
         if (err) {
             return next(err);
@@ -152,7 +162,7 @@ router.get('/files', isAuth, async (req, res, next) => {
     } else {
        fileNames = await fs.promises.readdir(__dirname + '/../uploads/' + user.folder); 
     }
-    res.render('files', {fileNames: fileNames});
+    res.render('files', {fileNames: fileNames, user: user.username});
 });
 
 router.get('/view/:fileName', isAuth, async (req, res) => {
@@ -160,14 +170,31 @@ router.get('/view/:fileName', isAuth, async (req, res) => {
     const root = path.resolve(__dirname + "/../");
     let content;
     try {
-        if (req.params.fileName.endsWith(".txt")) {
-            content = fs.readFileSync(root + '/uploads/'+ user.folder + "/" + req.params.fileName.slice(1))
+        if (user.username === 'admin') {
+            const dirNames = await fs.promises.readdir(root + '/uploads/')
+            for (let i = 0; i < dirNames.length; i++) {
+                const filePath = root + '/uploads/' + dirNames[i] + '/' + req.params.fileName.slice(1);
+                if (fs.existsSync(filePath)) {
+                    if (req.params.fileName.endsWith(".txt")) {
+                        content = fs.readFileSync(filePath)
+                    } else {
+                        content = fs.readFileSync(filePath)
+                        const base64enc = Buffer.from(content).toString('base64');
+                        content = base64enc;
+                    }
+                    break
+                }                
+            }
         } else {
-            content = fs.readFileSync(root + '/uploads/'+ user.folder + "/" + req.params.fileName.slice(1))
-            const base64enc = Buffer.from(content).toString('base64');
-            content = base64enc;
+            if (req.params.fileName.endsWith(".txt")) {
+                content = fs.readFileSync(root + '/uploads/'+ user.folder + "/" + req.params.fileName.slice(1))
+            } else {
+                content = fs.readFileSync(root + '/uploads/'+ user.folder + "/" + req.params.fileName.slice(1))
+                const base64enc = Buffer.from(content).toString('base64');
+                content = base64enc;
+            }
         }
-        res.render('view', {content: content, fileName: req.params.fileName.slice(1)})
+        res.render('view', {content: content, fileName: req.params.fileName.slice(1), user: user.username})
     } catch (error) {
         res.render('error', {data: {errorType: "No such file or directory!"}});
     }
@@ -175,7 +202,19 @@ router.get('/view/:fileName', isAuth, async (req, res) => {
 
 router.get('/download/:fileName', isAuth, async (req, res, next) => {
     const user = await User.findById(req.session.passport.user);
-    const fileToDownload = path.resolve(__dirname + "/../") + '/uploads/'+ user.folder + "/" + req.params.fileName.slice(1);
+    var fileToDownload;
+    if (user.username === 'admin') {
+        const dirNames = await fs.promises.readdir(root + '/uploads/')
+        for (let i = 0; i < dirNames.length; i++) {
+            const filePath = root + '/uploads/' + dirNames[i] + '/' + req.params.fileName.slice(1);
+            if (fs.existsSync(filePath)) {
+                fileToDownload = filePath
+                break
+            }                
+        }
+    } else {
+        fileToDownload = path.resolve(__dirname + "/../") + '/uploads/'+ user.folder + "/" + req.params.fileName.slice(1);
+    }
     res.download(fileToDownload, req.params.fileName.slice(1), (err) => {
         if(err) {
             return next(err);

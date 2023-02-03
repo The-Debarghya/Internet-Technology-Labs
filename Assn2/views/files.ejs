@@ -17,7 +17,11 @@
             Available Files:
           </p>
           <p class="subtitle">
-            Your uploaded files will be listed here.
+            <% if (user === 'admin') { %>
+              Logged in as <strong><%= user %></strong>.Everyone's uploaded files will be listed here.
+            <% } else { %>
+              Logged in as <strong><%= user %></strong>.Your uploaded files will be listed here.
+            <% } %>
           </p>
           <p class="subtitle is-6">
             Go back to <a href="/dashboard">Dashboard</a>
