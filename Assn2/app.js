@@ -36,7 +36,7 @@ app.set('view engine', 'ejs');
 require('./config/passport');
 app.use(passport.initialize());
 app.use(passport.session());
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(morgan('[:remote-addr] [:date[web]] ":method :url HTTP/:http-version" :status ":user-agent"'))
 app.use(routes);

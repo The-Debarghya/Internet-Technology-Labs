@@ -84,12 +84,12 @@ const upload = multer({
     fileFilter: async (req, file, callback) => {
         try {
             const ext = path.extname(file.originalname);
-            if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg' && ext !== '.gif' && ext !== '.txt') {
-                return callback(new Error('Only image and txt files are allowed.'));
+            if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg' && ext !== '.gif' && ext !== '.txt' && ext !== '.pdf') {
+                return callback(new Error('Only image, pdf and txt files are allowed.'));
             }
             const mime = file.mimetype;
-            if(mime !== 'image/jpeg' && mime !== 'text/plain' && mime !== 'image/png' && mime !== 'image/gif') {
-                return callback(new Error('Only image and txt mimetypes are allowed.'));
+            if(mime !== 'image/jpeg' && mime !== 'text/plain' && mime !== 'image/png' && mime !== 'image/gif' && mime !== 'application/pdf') {
+                return callback(new Error('Only image, pdf and text mimetypes are allowed.'));
             }
             callback(null, true);
         } catch (error) {
@@ -109,6 +109,22 @@ router.post('/upload', isAuth, upload.single('uploaded_file'), async (req, res, 
     res.set("Content-Security-Policy", "script-src 'sha256-MSnSmGZTR0J+A2zO+oWr29zXYQp+frnwJyJJwQgaJkM='")
     res.render('success', {message: 'Uploaded Successfully!', redirect: '/dashboard'});
 });
+
+router.post('/addtext', isAuth, async (req, res, next) => {
+    const user = await User.findById(req.session.passport.user);
+    const dir = __dirname + '/../uploads/' + user.folder + '/';
+    if (! /.*\.txt$/.test(req.body.filename)) {
+        return res.status(400).render('error', {data: {errorType: "Invalid FileName"}})
+    }
+    fs.writeFile(dir + req.body.filename, req.body.data, (err) => {
+        if (err !== null) {
+            return res.status(500).render('error', {data: {errorType: err.message}})
+        } else {
+            res.set("Content-Security-Policy", "script-src 'sha256-MSnSmGZTR0J+A2zO+oWr29zXYQp+frnwJyJJwQgaJkM='")
+            res.render('success', {message: 'Uploaded Successfully!', redirect: '/dashboard'});
+        }
+    })
+})
 
 router.get('/', (req, res, next) => {
     if (req.isAuthenticated()) {
@@ -202,13 +218,16 @@ router.get('/view/:fileName',isAuth, async (req, res) => {
         } else {
             if (req.params.fileName.endsWith(".txt")) {
                 content = fs.readFileSync(root + '/uploads/'+ user.folder + "/" + req.params.fileName.slice(1))
+            } else if(req.params.fileName.endsWith(".pdf")) {
+                content = ""
             } else {
                 content = fs.readFileSync(root + '/uploads/'+ user.folder + "/" + req.params.fileName.slice(1))
                 const base64enc = Buffer.from(content).toString('base64');
                 content = base64enc;
             }
         }
-        res.render('view', {content: content, fileName: req.params.fileName.slice(1), user: user.username})
+        res.set("Content-Security-Policy", "pdf-src 'self'")
+        res.render('view', {content: content, fileName: req.params.fileName.slice(1), user: user.username, folder: user.folder})
     } catch (error) {
         res.render('error', {data: {errorType: "No such file or directory!"}});
     }
@@ -234,6 +253,10 @@ router.get('/download/:fileName',isAuth, async (req, res, next) => {
             return next(err);
         }
     })
+})
+
+router.get('/addtext', isAuth, (req, res) => {
+    res.render('addtext')
 })
 
 router.get('/view',isAuth, (req, res) => {

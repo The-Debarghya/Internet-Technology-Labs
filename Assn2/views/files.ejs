@@ -36,6 +36,8 @@
                 <li>
                     <% if (fileNames[i].endsWith('.txt')) { %>
                         <i class="fas fa-file-lines"></i>
+                    <% } else if(fileNames[i].endsWith('.pdf')) { %>
+                        <i class="fas fa-file-pdf fa-solid"></i>
                     <% } else { %>
                         <i class="fas fa-file-image"></i>
                     <% } %>

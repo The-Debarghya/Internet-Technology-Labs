@@ -31,6 +31,21 @@
               </div>
             </div>
         </div> 
+        <% } else if (fileName.endsWith('.pdf')) { %>
+          <section class="hero bd-hero bd-is-basic">
+              <div class="hero-body">
+                <p class="title">
+                 <%= fileName %>
+                </p>
+                <p class="subtitle">
+                  Preview of your document. Currently logged in as <strong><%= user %></strong>.
+                </p>
+                <p class="subtitle is-6">
+                  Go back to <a href="/dashboard">Dashboard.</a>Check out other <a href="/files">files</a>.
+                </p>
+                <embed src="/uploads/<%= folder %>/<%= fileName %>" width="1200" height="375" type="application/pdf">
+              </div>
+            </section>
     <% } else if (fileName.endsWith('.png')) { %>
         <section class="hero bd-hero bd-is-basic">
             <div class="hero-body">
@@ -38,7 +53,7 @@
                <%= fileName %>
               </p>
               <p class="subtitle">
-                Preview of your file.
+                Preview of your file. Currently logged in as <strong><%= user %></strong>.
               </p>
               <p class="subtitle is-6">
                 Go back to <a href="/dashboard">Dashboard.</a>Check out other <a href="/files">files</a>.
@@ -60,7 +75,7 @@
            <%= fileName %>
           </p>
           <p class="subtitle">
-            Preview of your file.
+            Preview of your file. Currently logged in as <strong><%= user %></strong>.
           </p>
           <p class="subtitle is-6">
             Go back to <a href="/dashboard">Dashboard.</a>Check out other <a href="/files">files</a>.
@@ -81,7 +96,7 @@
            <%= fileName %>
           </p>
           <p class="subtitle">
-            Preview of your file.
+            Preview of your file. Currently logged in as <strong><%= user %></strong>.
           </p>
           <p class="subtitle is-6">
             Go back to <a href="/dashboard">Dashboard.</a>Check out other <a href="/files">files</a>.
