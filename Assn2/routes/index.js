@@ -15,6 +15,14 @@ function isAuth(req, res, next) {
     }
 }
 
+function sessionExists(req,res,next) {
+    if(!req.session.data) {
+        return res.redirect("/"); 
+    } else {
+      next();
+    }
+}
+
 function hashUser(username) {
     const hash = crypto.createHash('sha256').update(username).digest('hex');
     return hash;
@@ -74,28 +82,30 @@ const upload = multer({
         }
     }),
     fileFilter: async (req, file, callback) => {
-        const ext = path.extname(file.originalname);
-        if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg' && ext !== '.gif' && ext !== '.txt') {
-            return callback(new Error('Only image and txt files are allowed.'));
+        try {
+            const ext = path.extname(file.originalname);
+            if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg' && ext !== '.gif' && ext !== '.txt') {
+                return callback(new Error('Only image and txt files are allowed.'));
+            }
+            const mime = file.mimetype;
+            if(mime !== 'image/jpeg' && mime !== 'text/plain' && mime !== 'image/png' && mime !== 'image/gif') {
+                return callback(new Error('Only image and txt mimetypes are allowed.'));
+            }
+            callback(null, true);
+        } catch (error) {
+            return res.status(400).render('error', {data: {errorType: err.message}})
         }
-        const mime = file.mimetype;
-        if(mime !== 'image/jpeg' && mime !== 'text/plain' && mime !== 'image/png' && mime !== 'image/gif') {
-            return callback(new Error('Only image and txt mimetypes are allowed.'));
-        }
-        callback(null, true);
     },
     limits: {
         fileSize: 20 * 1024 * 1024 // 20 MiB
     }
 });
-router.post('/upload', isAuth, upload.single('uploaded_file'), async (err, req, res, next) => {
+
+router.post('/upload', isAuth, upload.single('uploaded_file'), async (req, res, next) => {
     const user = await User.findById(req.session.passport.user);
     if (!user) {
         return res.status(404).render('error', {data: {errorType: "User not found"}});
     }
-    if (err !== null) {
-        return res.status(400).render('error', {data: {errorType: err.message}})
-    }    
     res.set("Content-Security-Policy", "script-src 'sha256-MSnSmGZTR0J+A2zO+oWr29zXYQp+frnwJyJJwQgaJkM='")
     res.render('success', {message: 'Uploaded Successfully!', redirect: '/dashboard'});
 });
@@ -121,23 +131,27 @@ router.get('/register', (req, res, next) => {
     res.render('register');
 });
 
-router.get('/dashboard', isAuth, async (req, res, next) => {
+router.get('/dashboard',isAuth, async (req, res, next) => {
     const user = await User.findById(req.session.passport.user);
     res.render('dashboard', {user: user.username});
 });
 
-router.get('/logout', isAuth, (req, res, next) => {
+router.get('/logout',isAuth, (req, res, next) => {
     req.logout((err) => {
         if (err) {
             return next(err);
         }
+        req.session.destroy((err) => {
+            console.error(err.message);
+            return next(err);
+        });
         res.set("Content-Security-Policy", "script-src 'sha256-Qx9mL2K9oky7Tu8gS1KRgL3vhyhzv1Ixi3oXyswWXAw='")
         res.render('success', {message: 'Logged-out Successfully!', redirect: '/'});
     });
     
 });
 
-router.get('/login-success', isAuth, (req, res, next) => {
+router.get('/login-success',isAuth, (req, res, next) => {
     res.set("Content-Security-Policy", "script-src 'sha256-MSnSmGZTR0J+A2zO+oWr29zXYQp+frnwJyJJwQgaJkM='")
     res.render('success', {message: 'Logged-in Successfully!', redirect: '/dashboard'});
 });
@@ -146,11 +160,11 @@ router.get('/login-failure', (req, res, next) => {
     res.render('error', {data: {errorType: "Incorrect Username/Password"}});
 });
 
-router.get('/upload', isAuth, (req, res, next) => {
+router.get('/upload',isAuth, (req, res, next) => {
     res.render('upload');
 });
 
-router.get('/files', isAuth, async (req, res, next) => {
+router.get('/files',isAuth, async (req, res, next) => {
     const user = await User.findById(req.session.passport.user);
     var fileNames = [];
     if (user.username === 'admin') {
@@ -165,7 +179,7 @@ router.get('/files', isAuth, async (req, res, next) => {
     res.render('files', {fileNames: fileNames, user: user.username});
 });
 
-router.get('/view/:fileName', isAuth, async (req, res) => {
+router.get('/view/:fileName',isAuth, async (req, res) => {
     const user = await User.findById(req.session.passport.user);
     const root = path.resolve(__dirname + "/../");
     let content;
@@ -200,7 +214,7 @@ router.get('/view/:fileName', isAuth, async (req, res) => {
     }
 })
 
-router.get('/download/:fileName', isAuth, async (req, res, next) => {
+router.get('/download/:fileName',isAuth, async (req, res, next) => {
     const user = await User.findById(req.session.passport.user);
     var fileToDownload;
     if (user.username === 'admin') {
@@ -222,12 +236,26 @@ router.get('/download/:fileName', isAuth, async (req, res, next) => {
     })
 })
 
-router.get('/view', isAuth, (req, res) => {
+router.get('/view',isAuth, (req, res) => {
     res.render('error', {data: {errorType: "Blank File Name"}})
 })
 
-router.get('/download', isAuth, (req, res) => {
+router.get('/download',isAuth, (req, res) => {
     res.render('error', {data: {errorType: "Blank File Name"}})
+})
+
+router.post('/delete',isAuth, async (req, res, next) => {
+    const user = await User.findById(req.session.passport.user);
+    User.deleteOne({username: user.username})
+        .then(() => {
+            const dir = path.resolve(__dirname + "/../") + '/uploads/'+ user.folder
+            fs.rmSync(dir, {recursive: true, force:true})
+            res.set("Content-Security-Policy", "script-src 'sha256-HKHu8KzWy+uFQ5xdfwaa0tCXOadFl9TeeAR/XBFTSbw='")
+            res.render('success', {message: 'Account Deleted Successfully!', redirect: '/login'});
+        })
+        .catch((err) => {
+            res.status(500).render('error', {data: {errorType: err.message}})
+        })
 })
 
 module.exports = router;

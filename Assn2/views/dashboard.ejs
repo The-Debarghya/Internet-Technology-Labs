@@ -1,51 +1,101 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+  integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+  crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
 </head>
+
 <body>
-    <h1 class="title is-2"></h1>
-    <section class="hero bd-hero bd-is-basic">
-        <div class="hero-body">
-          <p class="title">
-            Dashboard
-          </p>
-          <p class="subtitle">
-            Hello, <strong><%= user %></strong>. Navigate to uploading/viewing/downloading files.
-          </p>
-          <p class="subtitle is-6">
-            <a href="/logout">Log out</a> from this account.
-          </p>
-          <div class="field is-grouped">
-            <div class="control">
-              <form action="/upload">                
-                <button class="button is-info is-small is-light">Upload</button>
-              </form>
-            </div>
-            <div class="control">
-              <form action="/files">
-                <button class="button is-info is-small is-light">View/Download</button>
-              </form> 
-            </div>
+  <nav class="navbar is-transparent is-light has-shadow">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="/dashboard">
+        <i class="fas fa-folder-open"></i>
+        <strong>
+          File Store
+        </strong>
+      </a>
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="false"></span>
+        <span aria-hidden="false"></span>
+        <span aria-hidden="false"></span>
+      </a>
+    </div>
+
+    <div id="navbarExampleTransparentExample" class="navbar-menu is-active">
+      <div class="navbar-start">
+        <a class="navbar-item" href="/dashboard">
+          Home
+        </a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">
+            Choose
+          </a>
+          <div class="navbar-dropdown is-boxed">
+            <a class="navbar-item" href="/upload">
+              Upload
+            </a>
+            <a class="navbar-item" href="/files">
+              View/Download
+            </a>
           </div>
         </div>
-      </section>
-      <section class="section is-small "></section>
-      <footer class="footer">
-        <div class="content has-text-centered">
-          <p>
-            <strong>File Store</strong> by <a href="https://github.com/The-Debarghya">Debarghya Maitra</a>. The source code is licensed
-            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
-            is not licensed. Generated with <a href="">EJS</a> and ❤.
-          </p>
+      </div>
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="field is-grouped">
+            <p class="control">
+              <a class="bd-tw-button button" href="/logout">
+                <span class="icon">
+                  <i class="fas fa-duotone fa-right-from-bracket"></i>
+                </span>
+                <span>
+                  Logout
+                </span>
+              </a>
+            </p>
+            <p class="control">
+            <form method="post" action="delete">
+              <button class="button is-danger is-light" type="submit"><span class="icon is-small">
+                  <i class="fas fa-solid fa-trash"></i>
+                </span><span>Delete Account</span></button>
+            </form>
+            </p>
+          </div>
         </div>
-      </footer>
-      
+      </div>
+    </div>
+  </nav>
+  <h1 class="title is-2"></h1>
+  <section class="hero bd-hero bd-is-basic is-large">
+    <div class="hero-body">
+      <p class="title">
+        Dashboard
+      </p>
+      <p class="subtitle">
+        Hello, <strong>
+          <%= user %>
+        </strong>. Navigate to uploading/viewing/downloading files.
+      </p>
+    </div>
+  </section>
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <p>
+        <strong>File Store</strong> by <a href="https://github.com/The-Debarghya">Debarghya Maitra</a>. The source code
+        is licensed
+        <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
+        is not licensed. Generated with <a href="">EJS</a> and ❤.
+      </p>
+    </div>
+  </footer>
 </body>
+
 </html>

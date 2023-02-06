@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
 const helmet = require('helmet');
+const nocache = require('nocache');
 const morgan = require('morgan');
 const favicon = require('serve-favicon');
 const routes = require('./routes');
@@ -22,12 +23,14 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24 // Equals 1 day 
+        maxAge: 1000 * 60 * 60 * 24, // Equals 1 day 
     },
     store: sessionStore
 }));
 
+app.set('trust proxy', 1)
 app.use(helmet());
+app.use(nocache())
 require('ejs');
 app.set('view engine', 'ejs');
 require('./config/passport');
@@ -43,6 +46,7 @@ app.use((err, req, res, next) => {
     }
     next(err);
 });
+
 app.all('*', (req, res) => {
     res.status(404).send("<h1>Page Not Found</h1>");
 })
