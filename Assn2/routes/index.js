@@ -183,22 +183,26 @@ router.get('/upload',isAuth, (req, res, next) => {
 router.get('/files',isAuth, async (req, res, next) => {
     const user = await User.findById(req.session.passport.user);
     var fileNames = [];
+    var ownFileNames = [];
     if (user.username === 'admin') {
-       const dirNames = await fs.promises.readdir(__dirname + '/../uploads/');
-       for (let i = 0; i < dirNames.length; i++) {
+        ownFileNames = await fs.promises.readdir(__dirname + '/../uploads/' + user.folder)
+        const dirNames = await fs.promises.readdir(__dirname + '/../uploads/');
+        for (let i = 0; i < dirNames.length; i++) {
             const files = fs.readdirSync(__dirname + '/../uploads/' + dirNames[i]);
             fileNames.push(...files)              
        }
     } else {
-       fileNames = await fs.promises.readdir(__dirname + '/../uploads/' + user.folder); 
+       fileNames = await fs.promises.readdir(__dirname + '/../uploads/' + user.folder);
+       ownFileNames = fileNames;
     }
-    res.render('files', {fileNames: fileNames, user: user.username});
+    res.render('files', {fileNames: fileNames, user: user.username, ownFileNames: ownFileNames});
 });
 
 router.get('/view/:fileName',isAuth, async (req, res) => {
     const user = await User.findById(req.session.passport.user);
     const root = path.resolve(__dirname + "/../");
     let content;
+    let foldername;
     try {
         if (user.username === 'admin') {
             const dirNames = await fs.promises.readdir(root + '/uploads/')
@@ -207,6 +211,9 @@ router.get('/view/:fileName',isAuth, async (req, res) => {
                 if (fs.existsSync(filePath)) {
                     if (req.params.fileName.endsWith(".txt")) {
                         content = fs.readFileSync(filePath)
+                    } else if(req.params.fileName.endsWith(".pdf")) {
+                        content = ""
+                        foldername = dirNames[i]
                     } else {
                         content = fs.readFileSync(filePath)
                         const base64enc = Buffer.from(content).toString('base64');
@@ -225,9 +232,10 @@ router.get('/view/:fileName',isAuth, async (req, res) => {
                 const base64enc = Buffer.from(content).toString('base64');
                 content = base64enc;
             }
+            foldername = user.folder
         }
         res.set("Content-Security-Policy", "pdf-src 'self'")
-        res.render('view', {content: content, fileName: req.params.fileName.slice(1), user: user.username, folder: user.folder})
+        res.render('view', {content: content, fileName: req.params.fileName.slice(1), user: user.username, folder: foldername})
     } catch (error) {
         res.render('error', {data: {errorType: "No such file or directory!"}});
     }
@@ -253,6 +261,14 @@ router.get('/download/:fileName',isAuth, async (req, res, next) => {
             return next(err);
         }
     })
+})
+
+router.get('/removefile/:fileName', isAuth, async (req, res) => {
+    const user = await User.findById(req.session.passport.user);
+    var fileToDelete = path.resolve(__dirname + '/../') + '/uploads/' + user.folder + '/' + req.params.fileName.slice(1);
+    fs.rmSync(fileToDelete);
+    res.set("Content-Security-Policy", "script-src 'sha256-MSnSmGZTR0J+A2zO+oWr29zXYQp+frnwJyJJwQgaJkM='")
+    res.render('success', {message: 'Deletion Successful!', redirect: '/dashboard'});
 })
 
 router.get('/addtext', isAuth, (req, res) => {

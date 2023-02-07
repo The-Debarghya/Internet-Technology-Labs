@@ -10,8 +10,7 @@
     <title>Files List</title>
 </head>
 <body>
-    <h1 class="title is-3"></h1>
-    <section class="hero bd-hero bd-is-basic">
+    <section class="hero bd-hero bd-is-basic is-info">
         <div class="hero-body">
           <p class="title">
             Available Files:
@@ -24,7 +23,7 @@
             <% } %>
           </p>
           <p class="subtitle is-6">
-            Go back to <a href="/dashboard">Dashboard</a>
+            Go back to <strong><a href="/dashboard">Dashboard</a></strong>
           </p>
         </div>
       </section>
@@ -56,6 +55,13 @@
                   <button class="button is-info is-small is-light">Download</button>
                 </form> 
               </div>
+              <% if(ownFileNames.includes(fileNames[i])) { %>
+                <div class="control">
+                  <form action="/removefile/:<%= fileNames[i] %>">
+                    <button class="button is-danger is-small is-light">Delete</button>
+                  </form> 
+                </div>
+              <% } %>
             </div>
           <% } %>
     </div>
@@ -64,9 +70,8 @@
       <footer class="footer">
         <div class="content has-text-centered">
           <p>
-            <strong>File Store</strong> by <a href="https://github.com/The-Debarghya">Debarghya Maitra</a>. The source code is licensed
-            <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
-            is not licensed. Generated with <a href="">EJS</a> and ❤.
+            <strong>File Store</strong> by <a href="https://github.com/The-Debarghya">Debarghya Maitra</a>. The source code is not licensed. 
+            The website content is not licensed. Generated with <a href="">EJS</a> and disgust.
           </p>
         </div>
       </footer>
