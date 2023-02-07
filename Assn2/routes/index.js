@@ -271,6 +271,10 @@ router.get('/removefile/:fileName', isAuth, async (req, res) => {
     res.render('success', {message: 'Deletion Successful!', redirect: '/dashboard'});
 })
 
+router.get('/removefile', isAuth, (req, res) => {
+    res.render('error', {data: {errorType: "Blank File Name"}})
+})
+
 router.get('/addtext', isAuth, (req, res) => {
     res.render('addtext')
 })
