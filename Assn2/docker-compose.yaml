@@ -7,8 +7,7 @@ services:
     volumes:
       - mongodb_data:/data/db
   file-store:
-    image: file-store:latest
-    build: .
+    image: heisenberg8622/file-store:latest
     environment:
       - MONGO_URL=mongodb://mongodb:27017/test_db
       - SECRET=db982b9^&%UB%*&CVIB9n83.6nddasdl'l@!
