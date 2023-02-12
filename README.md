@@ -4,7 +4,7 @@
 
 - Each one can be tested separately.
 
-## How to test & Assignment Contents?
+## How to test & What are the Assignment Contents?
 
 - `Assn1`: A Redis-Like commandline **Key-value pair** store. Users need to authenticate and interact with the server.
   - *How to simulate?*: First create a json file containing usernames and **Bcrypt hashed** passwords using _util.py_. Then run _server.py_ next test the server with _client.py_.
