@@ -1,6 +1,6 @@
 # Internet-Technology-Labs
 
-### Assignments done in Internet Technology Lab of BCSE 5th Semester curricullum.
+### Assignments done in Internet Technology Lab of BCSE 6th Semester curricullum.
 
 - Each one can be tested separately.
 
